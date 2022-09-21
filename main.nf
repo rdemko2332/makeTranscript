@@ -5,12 +5,14 @@ nextflow.enable.dsl=2
 process runSamtools {
   container = 'biocontainers/samtools:v1.9-4-deb_cv1'
 
+  publishDir "$params.outputDir", mode: "copy"
+
   input:
     path 'genome.fa'
     path 'region.txt'
 
   output:
-    path 'transcript.fasta'
+    path 'transcriptFinal.fasta'
 
   script:
     '''
@@ -43,30 +45,10 @@ while(<REGION>){
     close FASTA;
 }
 close REGION;
-    '''
-}
-
-
-process cleanTranscript {
-  container = 'biocontainers/samtools:v1.9-4-deb_cv1'
-
-  publishDir "$params.outputDir", mode: "copy"
-
-  input:
-    path 'transcript.fa'
-
-  output:
-    path 'transcriptFinal.fasta'
-
-  script:
-    '''
-    #!/usr/bin/perl
-
-use strict;
 
 open(O,">temp.fasta");
 
-open(I,"<transcript.fa") || die "Unable to open transcriptFile";
+open(I,"<transcript.fasta") || die "Unable to open transcriptFile";
 
 my $line;
 while(<I>){
@@ -85,6 +67,7 @@ my $fasta = `fold -w 60 temp.fasta > transcriptFinal.fasta`
     '''
 }
 
+
 workflow {
-    runSamtools(params.genome, params.region) | cleanTranscript
+    runSamtools(params.genome, params.region)
 }
