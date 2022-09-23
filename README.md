@@ -8,13 +8,13 @@
 
 5. I then created a process that will take this final shifted object and write to a file like so
 
-<strain-name>:<cds_start_shifted>-<cds_end_shifted>	<0 for forward 1 for rev>
+  <strain-name>:<cds_start_shifted>-<cds_end_shifted>	<0 for forward 1 for rev>
 
-<strain-name>:<cds_start_shifted>-<cds_end_shifted>   <0 for forward 1 for rev>
+  <strain-name>:<cds_start_shifted>-<cds_end_shifted>   <0 for forward 1 for rev>
 
-<strain-name>:<cds_start_shifted>-<cds_end_shifted>   <0 for forward 1 for rev>
+  <strain-name>:<cds_start_shifted>-<cds_end_shifted>   <0 for forward 1 for rev>
 
-This file is almost in the correct format for samtools faidx (to save time later), but also contains the indicator for forward or reverse. I will refer to this file as region.txt
+  This file is almost in the correct format for samtools faidx (to save time later), but also contains the indicator for forward or reverse. I will refer to this file as region.txt
 
 6. I created a nextflow process (which is able to run within a samtools docker container) which takes the indexed consensus fasta, and the region.txt file. For every line in the region.txt file (this is necessary, as the samtools call is different depending on forward or reverse), it will see if the the lines contains a 0 or 1. This indicates forward or reverse. If reverse, then there is an additional -i flag in the samtools faidx command. I capture the output from the samtools faidx command and write it to a file. I do this for every line in the file, and append the output to the file. This actually runs very fast.
 
