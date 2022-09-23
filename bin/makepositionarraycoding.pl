@@ -68,10 +68,11 @@ while (my ($transcript, $source_id, $gene_na_feature_id, $exon_start, $exon_end,
 
 #===================================== GENERATING LOCATIONSSHIFTED ARRAY =========================================================================
 my @locationsShifted = ();
-my $shiftFrame=0;
 my $coordinateFrame=0;
 my $coordinatesLen = scalar @coordinates;
 my $locationShiftsLen = scalar @locationshifts;
+my $shiftFrame=0;
+my $shiftFrameLimit = $locationShiftsLen-1;
 my $isRev;
 my $oldShift = 0;
 $counter = 0;
@@ -79,10 +80,10 @@ my ($cds_start, $cds_end, $isRev);
 for (my $coordinateFrame;$coordinateFrame<$coordinatesLen;$coordinateFrame++){
     for (my $i=0;$i<3;$i++) {
         if ($i == 0) {
-            ($cds_start, $oldShift, $shiftFrame) = &calcCoordinates($shiftFrame, $coordinateFrame, $locationShiftsLen, $oldShift, $i);
+            ($cds_start, $oldShift, $shiftFrame) = &calcCoordinates($shiftFrame, $coordinateFrame, $locationShiftsLen, $oldShift, $i, $shiftFrameLimit);
         }        
         elsif ($i == 1) {
-            ($cds_end, $oldShift, $shiftFrame) = &calcCoordinates($shiftFrame, $coordinateFrame, $locationShiftsLen, $oldShift, $i);
+            ($cds_end, $oldShift, $shiftFrame) = &calcCoordinates($shiftFrame, $coordinateFrame, $locationShiftsLen, $oldShift, $i, $shiftFrameLimit);
         }
         elsif ($i == 2) {
             $isRev = $coordinates[$coordinateFrame][$i];
@@ -120,16 +121,16 @@ sub calcCoordinates {
     elsif ($coordinates[$coordinateFrame][$i] < $locationshifts[$shiftFrame][0]) {
 	$coordinate = $oldShift + $coordinates[$coordinateFrame][$i];
     }
-    elsif ($locationshifts[$shiftFrame][0] == $coordinates[$coordinateFrame][$i]) {
+    elsif ($coordinates[$coordinateFrame][$i] == $locationshifts[$shiftFrame][0]) {
 	$coordinate = $locationshifts[$shiftFrame][1] + $coordinates[$coordinateFrame][$i];
     }
-    elsif ($locationshifts[$shiftFrame][0] < $coordinates[$coordinateFrame][$i]) {
-	until ($locationshifts[$shiftFrame][0] >= $coordinates[$coordinateFrame][$i] || $shiftFrame >= $locationshiftsLen) {
+    elsif ($coordinates[$coordinateFrame][$i] > $locationshifts[$shiftFrame][0] || $shiftFrame == $shiftFrameLimit) {
+	until ($locationshifts[$shiftFrame][0] >= $coordinates[$coordinateFrame][$i] || $shiftFrame == $shiftFrameLimit) {
 	    $oldShift = $locationshifts[$shiftFrame][1];
 	    $shiftFrame++;
 	}
-	if ($shiftFrame > $locationshiftsLen) {
-	    $coordinate = $oldShift + $coordinates[$coordinateFrame][$i];
+	if ($shiftFrame == $shiftFrameLimit) {
+	    $coordinate = $locationshifts[$shiftFrame][1] + $coordinates[$coordinateFrame][$i];
 	}
 	elsif ($locationshifts[$shiftFrame][0] == $coordinates[$coordinateFrame][$i]) {
 	    $coordinate = $locationshifts[$shiftFrame][1] + $coordinates[$coordinateFrame][$i];
@@ -140,4 +141,5 @@ sub calcCoordinates {
     }
     return ($coordinate, $oldShift, $shiftFrame);   
 }
+
 
