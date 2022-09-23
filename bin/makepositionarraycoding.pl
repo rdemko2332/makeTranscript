@@ -95,8 +95,8 @@ for (my $coordinateFrame;$coordinateFrame<$coordinatesLen;$coordinateFrame++){
     push (@{$locationsShifted[$counter]}, ($cds_start, $cds_end, $isRev));
     $counter++;
 }
-#print TEST Dumper(\@locationsShifted), "\n";
-#close TEST;
+print TEST Dumper(\@locationsShifted), "\n";
+close TEST;
 
 #========================== CREATING REGION FILE FOR SAMTOOLS ===========================================================================
 
@@ -124,7 +124,7 @@ sub calcCoordinates {
 	$coordinate = $locationshifts[$shiftFrame][1] + $coordinates[$coordinateFrame][$i];
     }
     elsif ($locationshifts[$shiftFrame][0] < $coordinates[$coordinateFrame][$i]) {
-	until ($locationshifts[$shiftFrame][0] >= $coordinates[$coordinateFrame][$i] || $shiftFrame > $locationshiftsLen) {
+	until ($locationshifts[$shiftFrame][0] >= $coordinates[$coordinateFrame][$i] || $shiftFrame >= $locationshiftsLen) {
 	    $oldShift = $locationshifts[$shiftFrame][1];
 	    $shiftFrame++;
 	}

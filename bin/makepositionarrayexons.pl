@@ -125,7 +125,7 @@ sub calcCoordinates {
 	$coordinate = $locationshifts[$shiftFrame][1] + $coordinates[$coordinateFrame][$i];
     }
     elsif ($locationshifts[$shiftFrame][0] < $coordinates[$coordinateFrame][$i]) {
-	until ($locationshifts[$shiftFrame][0] >= $coordinates[$coordinateFrame][$i] || $shiftFrame > $locationshiftsLen) {
+	until ($locationshifts[$shiftFrame][0] >= $coordinates[$coordinateFrame][$i] || $shiftFrame >= $locationshiftsLen) {
 	    $oldShift = $locationshifts[$shiftFrame][1];
 	    $shiftFrame++;
 	}
