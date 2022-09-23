@@ -15,6 +15,10 @@ use shifted;
 
 
 # ================ TESTS ==============================================================================================================================
+
+
+# COORDINATE TESTS
+
 # Coordinate Prior to any indels 
 is( shifted::locationShifted(0,0), 250 );
 
@@ -23,5 +27,15 @@ is( shifted::locationShifted(3,0), 9123 );
 
 # Coordinate Greater than last indel location
 is( shifted::locationShifted(7,1), 21801 );
+
+
+# Reverse Value Tests
+
+is( shifted::locationShifted(0,2), 0 );
+
+is( shifted::locationShifted(3,2), 1 );
+
+is( shifted::locationShifted(7,2), 1 );
+
 
 done_testing();
