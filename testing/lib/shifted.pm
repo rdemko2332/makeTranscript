@@ -48,7 +48,7 @@ sub locationShifted {
 sub calcCoordinates {
     my ($shiftFrame, $coordinateFrame, $locationshiftsLen, $oldShift, $i, $shiftFrameLimit) = @_;
     my $coordinate;
-    if ($shiftFrame > $locationshiftsLen) {
+    if ($shiftFrame > $shiftFrameLimit) {
 	$coordinate = $oldShift + $coordinates[$coordinateFrame][$i];
     }
     elsif ($coordinates[$coordinateFrame][$i] < $locationshifts[$shiftFrame][0]) {
