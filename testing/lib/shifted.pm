@@ -62,8 +62,11 @@ sub calcCoordinates {
 	    $oldShift = $locationshifts[$shiftFrame][1];
 	    $shiftFrame++;
 	}
-	if ($shiftFrame == $shiftFrameLimit) {
-	    $coordinate = $locationshifts[$shiftFrame][1] + $coordinates[$coordinateFrame][$i];
+	if ($shiftFrame == $shiftFrameLimit && $coordinates[$coordinateFrame][$i] < $locationshifts[$shiftFrame][0]) {
+	    $coordinate = $coordinates[$coordinateFrame][$i] + $locationshifts[$shiftFrame-1][1];
+	}
+	elsif ($shiftFrame == $shiftFrameLimit && $coordinates[$coordinateFrame][$i] > $locationshifts[$shiftFrame][0]) {
+	    $coordinate = $coordinates[$coordinateFrame][$i] + $locationshifts[$shiftFrame][1];
 	}
 	elsif ($locationshifts[$shiftFrame][0] == $coordinates[$coordinateFrame][$i]) {
 	    $coordinate = $locationshifts[$shiftFrame][1] + $coordinates[$coordinateFrame][$i];

@@ -115,7 +115,7 @@ close REGION;
 sub calcCoordinates {
     my ($shiftFrame, $coordinateFrame, $locationshiftsLen, $oldshift, $i) = @_;
     my $coordinate;
-    if ($shiftFrame > $locationshiftsLen) {
+    if ($shiftFrame > $shiftFrameLimit) {
 	$coordinate = $oldShift + $coordinates[$coordinateFrame][$i];
     }
     elsif ($coordinates[$coordinateFrame][$i] < $locationshifts[$shiftFrame][0]) {
@@ -129,8 +129,11 @@ sub calcCoordinates {
 	    $oldShift = $locationshifts[$shiftFrame][1];
 	    $shiftFrame++;
 	}
-	if ($shiftFrame == $shiftFrameLimit) {
-	    $coordinate = $locationshifts[$shiftFrame][1] + $coordinates[$coordinateFrame][$i];
+	if ($shiftFrame == $shiftFrameLimit && $coordinates[$coordinateFrame][$i] < $locationshifts[$shiftFrame][0]) {
+	    $coordinate = $coordinates[$coordinateFrame][$i] + $locationshifts[$shiftFrame-1][1];
+	}
+	elsif ($shiftFrame == $shiftFrameLimit && $coordinates[$coordinateFrame][$i] > $locationshifts[$shiftFrame][0]) {
+	    $coordinate = $coordinates[$coordinateFrame][$i] + $locationshifts[$shiftFrame][1];
 	}
 	elsif ($locationshifts[$shiftFrame][0] == $coordinates[$coordinateFrame][$i]) {
 	    $coordinate = $locationshifts[$shiftFrame][1] + $coordinates[$coordinateFrame][$i];
@@ -141,5 +144,6 @@ sub calcCoordinates {
     }
     return ($coordinate, $oldShift, $shiftFrame);   
 }
+
 
 

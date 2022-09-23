@@ -16,25 +16,31 @@ use shifted;
 
 # ================ TESTS ==============================================================================================================================
 
-
-# COORDINATE TESTS
-
 # Coordinate Prior to any indels 
 is( shifted::locationShifted(0,0), 250 );
+is( shifted::locationShifted(0,1), 560 );
 
 # Coordinate inside indels
+is( shifted::locationShifted(1,0), 3765 );
+is( shifted::locationShifted(1,1), 4763 );
 is( shifted::locationShifted(3,0), 9123 );
+is( shifted::locationShifted(4,1), 12704 );
+is( shifted::locationShifted(6,1), 18945 );
+
+# Indel Occuring Between Positions, Last Indel Occuring Between Positions
+is( shifted::locationShifted(7,0), 20008 );
+is( shifted::locationShifted(7,1), 21801 );
 
 # Coordinate Greater than last indel location
-is( shifted::locationShifted(7,1), 21801 );
+is( shifted::locationShifted(8,0), 22667 );
+is( shifted::locationShifted(8,1), 23380 );
 
 
 # Reverse Value Tests
-
 is( shifted::locationShifted(0,2), 0 );
-
+is( shifted::locationShifted(1,2), 1 );
 is( shifted::locationShifted(3,2), 1 );
-
+is( shifted::locationShifted(5,2), 1 );
 is( shifted::locationShifted(7,2), 1 );
 
 
