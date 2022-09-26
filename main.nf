@@ -20,6 +20,16 @@ process runSamtools {
 
 use strict;
 
+my $defline;
+open(REGION, "<region.txt") or die "Couldn't open regionFile";
+while(<REGION>){
+    if ($_ =~ /^(.*):.+/) {
+         $defline = $1;
+	 last;
+    }
+}
+close REGION;
+
 open(REGION, "<region.txt") or die "Couldn't open regionFile";
 my $line;
 my $seq;
@@ -63,7 +73,8 @@ while(<I>){
 }
 close I;
 close O;
-my $fasta = `fold -w 60 temp.fasta > transcriptFinal.fasta`
+my $fasta = `fold -w 60 temp.fasta > transcriptFinal.fasta`;
+$fasta = `echo '>$defline' | cat - transcriptFinal.fasta > temp && mv temp transcriptFinal.fasta`;
     '''
 }
 
