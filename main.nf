@@ -1,6 +1,21 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
+process generateRegion {
+
+  publishDir "$params.outputDir", mode: "copy"
+
+  input:
+    path 'makepositionarraycoding.pl'
+
+  output:
+    path 'region.txt'
+
+  script:
+    """
+    /usr/bin/perl makepositionarraycoding.pl --test_file shifted.txt --sequence_id LV39cl5_chr1 --region_file region.txt
+    """
+}
 
 process runSamtools {
   container = 'biocontainers/samtools:v1.9-4-deb_cv1'
@@ -80,5 +95,6 @@ $fasta = `echo '>$defline' | cat - transcriptFinal.fasta > temp && mv temp trans
 
 
 workflow {
-    runSamtools(params.genome, params.region)
+    regionFile = generateRegion(params.makepositionarraycoding)
+    runSamtools(params.genome, regionFile)
 }
